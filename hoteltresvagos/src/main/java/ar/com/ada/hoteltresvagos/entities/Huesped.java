@@ -22,7 +22,7 @@ public class Huesped {
     private String domicilio;
     @Column(name = "domicilio_alternativo")
     private String domicilioAlternativo;
-    @OneToMany(mappedBy = "huesped", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "huesped", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Reserva> reservas = new ArrayList<>();
 
     public Huesped(String nombre) {
@@ -61,11 +61,6 @@ public class Huesped {
 
     public int getDni() {
         return dni;
-    }
-
-    @Override
-    public String toString() {
-        return "Huesped [dni=" + dni + ", nombre=" + nombre + "]";
     }
 
     public String getDomicilio() {
