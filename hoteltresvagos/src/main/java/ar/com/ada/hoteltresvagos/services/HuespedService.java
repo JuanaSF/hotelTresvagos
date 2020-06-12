@@ -10,11 +10,13 @@ public class HuespedService {
 
     public static Scanner Teclado = new Scanner(System.in);
 
-    protected HuespedManager ABMHuesped = new HuespedManager();
+    protected HuespedManager ABMHuesped;
+    public HuespedService(HuespedManager ABMHuesped){
+        this.ABMHuesped = ABMHuesped;
+    }
 
 
     public void alta() throws Exception {
-        ABMHuesped.setup();
         Huesped huesped = new Huesped();
         System.out.println("Ingrese el nombre:");
         huesped.setNombre(Teclado.nextLine());
@@ -88,8 +90,7 @@ public class HuespedService {
 
         if (huespedEncontrado != null) {
 
-            // RECOMENDACION NO USAR toString(), esto solo es a nivel educativo.
-            System.out.println(huespedEncontrado.toString() + " seleccionado para modificacion.");
+            System.out.println(huespedEncontrado.getNombre() + " seleccionado para modificacion.");
 
             System.out.println(
                     "Elija qué dato de la huesped desea modificar: \n1: nombre, \n2: DNI, \n3: domicilio, \n4: domicilio alternativo");
@@ -125,8 +126,6 @@ public class HuespedService {
                 default:
                     break;
             }
-
-            // Teclado.nextLine();
 
             ABMHuesped.update(huespedEncontrado);
 

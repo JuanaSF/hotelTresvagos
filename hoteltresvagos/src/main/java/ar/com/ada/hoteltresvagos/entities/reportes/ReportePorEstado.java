@@ -1,11 +1,9 @@
 package ar.com.ada.hoteltresvagos.entities.reportes;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-public class ReportePorEstado {
+public class ReportePorEstado extends Reporte {
 
     @Id
     @Column(name = "tipo_estado_id")
@@ -19,8 +17,6 @@ public class ReportePorEstado {
     private int totalPagosRecibidos;
     @Column(name = "importe_total")
     private int importeTotal;
-    //@Column(name = "pagos_faltantes")
-    //private int pagosFaltantes;
 
     public int getTipoEstadoId() {
         return tipoEstadoId;
@@ -70,14 +66,4 @@ public class ReportePorEstado {
         this.importeTotal = importeTotal;
     }
 
-    /*
-    public int getPagosFaltantes() {
-        return pagosFaltantes;
-    }
-
-    public void setPagosFaltantes(int pagosFaltantes) {
-        this.pagosFaltantes = pagosFaltantes;
-    }*/
-
-    
 }

@@ -121,12 +121,10 @@ public class HuespedManager {
 
         Session session = sessionFactory.openSession();
 
-        // SQL Injection vulnerability exposed.
-        // Deberia traer solo aquella del nombre y con esto demostrarmos que trae todas
-        // si pasamos
-        // como nombre: "' or '1'='1"
-        Query query = session.createNativeQuery("SELECT * FROM huesped where nombre = '" + nombre + "'", Huesped.class);
 
+        Query query = session.createNativeQuery("SELECT * FROM huesped where nombre = ?", Huesped.class);
+
+        query.setParameter(1, nombre);
         List<Huesped> huespedes = query.getResultList();
 
         return huespedes;

@@ -48,17 +48,16 @@ public class ReservaManager {
         session.close();
     }
 
-    //Tendra que ir reservaId??
-    public Huesped read(int huespedId) {
+    public Reserva read(int reservaId) {
         Session session = sessionFactory.openSession();
 
-        Huesped huesped = session.get(Huesped.class, huespedId);
+        Reserva reserva = session.get(Reserva.class, reservaId);
 
         session.close();
 
-        return huesped;
+        return reserva;
     }
-    //Este no es necesario para reservas, a menos que se quiera buscar algo con el dni
+    
     public Huesped buscarHuespedDNI(int dni) {
         Session session = sessionFactory.openSession();
 

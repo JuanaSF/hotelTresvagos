@@ -16,13 +16,17 @@ public class ReservaService {
 
     public static Scanner Teclado = new Scanner(System.in);
 
-    protected ReservaManager ABMReserva = new ReservaManager();
-    protected HuespedManager ABMHuesped = new HuespedManager();
+    protected ReservaManager ABMReserva;
+    protected HuespedManager ABMHuesped;
+
+    public ReservaService(ReservaManager ABMReserva, HuespedManager ABMHuesped) {
+        this.ABMReserva = ABMReserva;
+        this.ABMHuesped = ABMHuesped;
+    }
 
     public void cargarReserva() throws HuespedDNIException {
 
         Reserva reserva = new Reserva();
-        ABMReserva.setup();
         System.out.println("Desea realizar la reserva con un huesped ya registrado?");
         String respuesta;
         System.out.println("Ingrese si o no");
@@ -72,7 +76,6 @@ public class ReservaService {
 
         DateFormat dFormat = new SimpleDateFormat("dd/MM/yy");
 
-        // Alternativa de leer fecha con try catch
         try {
             fechaIngreso = dFormat.parse(Teclado.nextLine());
 
@@ -88,6 +91,7 @@ public class ReservaService {
         } catch (ParseException e) {
             System.out.println("Ingreso una fecha invalida.");
             System.out.println("Vuelva a e empezar");
+            return;
         }
 
         reserva.setFechaIngreso(fechaIngreso);
@@ -107,6 +111,141 @@ public class ReservaService {
                 + ", a nombre de " + reserva.getHuesped().getNombre() + "]");
     }
 
+    public void eliminarReserva() {
+
+        System.out.println("Ingrese el Nro(Id) de Reserva:");
+        int id = Teclado.nextInt();
+        Teclado.nextLine();
+        Reserva reservaEncontrada = ABMReserva.read(id);
+
+        if (reservaEncontrada == null) {
+            System.out.println("Reserva no encontrada.");
+
+        } else {
+
+            try {
+
+                ABMReserva.delete(reservaEncontrada);
+                System.out.println(
+                        "El registro de la reserva " + reservaEncontrada.getReservaId() + " ha sido eliminado.");
+            } catch (Exception e) {
+                System.out.println("Ocurrio un error al eliminar una huesped. Error: " + e.getCause());
+            }
+
+        }
+    }
+
+    public void modificarReserva() {
+
+        System.out.println("Ingrese el ID de la reserva a modificar:");
+        int id = Teclado.nextInt();
+        Teclado.nextLine();
+        Reserva reservaEncontrada = ABMReserva.read(id);
+
+        if (reservaEncontrada != null) {
+
+            System.out.println("Reserva: " + reservaEncontrada.getReservaId() + " seleccionada para modificacion.");
+
+            System.out.println(
+                    "Elija qué dato de la reserva que desea modificar: \n1: fecha de reserva \n2: fecha de ingreso \n3: fecha de egreso \n4: habitación \n5: importe de reserva \n6: importe total \n7: importe pagado \n8: Id del estado de pago");
+            int opcion = Teclado.nextInt();
+            Teclado.nextLine();
+
+            DateFormat dFormat = new SimpleDateFormat("dd/MM/yy");
+
+            switch (opcion) {
+                case 1:
+                    System.out.println("Ingrese la nueva fecha de reserva:");
+                    Date fechaReserva = null;
+                    try {
+                        fechaReserva = dFormat.parse(Teclado.nextLine());
+
+                    } catch (Exception ex) {
+                        System.out.println("Ingreso una fecha invalida.");
+                        System.out.println("Vuelva a e empezar");
+                        return;
+                    }
+                    reservaEncontrada.setFechaReserva(fechaReserva);
+
+                    break;
+                case 2:
+                    System.out.println("Ingrese la nueva fecha de ingreso:");
+                    Date fechaIngreso = null;
+
+                    try {
+                        fechaIngreso = dFormat.parse(Teclado.nextLine());
+
+                    } catch (Exception ex) {
+                        System.out.println("Ingreso una fecha invalida.");
+                        System.out.println("Vuelva a e empezar");
+                        return;
+                    }
+                    reservaEncontrada.setFechaIngreso(fechaIngreso);
+
+                    break;
+                case 3:
+                    System.out.println("Ingrese la nueva fecha de egreso:");
+                    Date fechaEgreso = null;
+
+                    try {
+                        fechaEgreso = dFormat.parse(Teclado.nextLine());
+
+                    } catch (Exception ex) {
+                        System.out.println("Ingreso una fecha invalida.");
+                        System.out.println("Vuelva a e empezar");
+                        return;
+                    }
+                    reservaEncontrada.setFechaEgreso(fechaEgreso);
+
+                    break;
+                case 4:
+                    System.out.println("Ingrese el nuevo numero de habitacion:");
+                    Integer habitacion = Teclado.nextInt();
+                    reservaEncontrada.setHabitacion(habitacion);
+
+                    break;
+                case 5:
+                    System.out.println("Ingrese nuevo importe reserva:");
+                    BigDecimal importeReserva = Teclado.nextBigDecimal();
+                    Teclado.nextLine();
+                    reservaEncontrada.setImporteReserva(importeReserva);
+
+                    break;
+                case 6:
+                    System.out.println("Ingrese nuevo importe total:");
+                    BigDecimal importeTotal = Teclado.nextBigDecimal();
+                    Teclado.nextLine();
+                    reservaEncontrada.setImporteTotal(importeTotal);
+
+                    break;
+                case 7:
+                    System.out.println("Ingrese nuevo importe pagado:");
+                    BigDecimal importepagado = Teclado.nextBigDecimal();
+                    Teclado.nextLine();
+                    reservaEncontrada.setImportePagado(importepagado);
+
+                    break;
+                case 8:
+                    System.out.println("Ingrese el nuevo estado ID:");
+                    Teclado.nextInt();
+                    reservaEncontrada.setTipoEstadoId(Teclado.nextInt());
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            ABMReserva.update(reservaEncontrada);
+
+            System.out.println("El registro de la reserva: " + reservaEncontrada.getReservaId() + " ha sido modificado.");
+
+        } else {
+            System.out.println("reserva no encontrada.");
+        }
+
+    }
+
     public void listarReserva() {
 
         List<Reserva> todos = ABMReserva.buscarTodos();
@@ -115,7 +254,7 @@ public class ReservaService {
         }
     }
 
-    public void listarReservaPorNombre(){
+    public void listarReservaPorNombre() {
         System.out.println("Ingrese nombre para traer sus reservas");
         String nombre = Teclado.nextLine();
         List<Reserva> reservas = ABMReserva.buscarPorNombreHuesped(nombre);
@@ -134,5 +273,22 @@ public class ReservaService {
         else
             System.out.println();
     }
-    
+
+    /*
+     * public Date ingresarFecha() throws Exception {
+     * 
+     * Date fecha = null;
+     * 
+     * DateFormat dFormat = new SimpleDateFormat("dd/MM/yy");
+     * 
+     * //System.out.println("Ingrese la fecha de ingreso(dd/mm/yy)");
+     * 
+     * try { fecha = dFormat.parse(Teclado.nextLine());
+     * 
+     * } catch (Exception ex) { System.out.println("Ingreso una fecha invalida.");
+     * System.out.println("Vuelva a e empezar"); }
+     * 
+     * return fecha; }
+     */
+
 }

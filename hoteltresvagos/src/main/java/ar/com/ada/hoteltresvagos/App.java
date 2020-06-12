@@ -10,10 +10,5 @@ public class App {
         miABM.iniciar();
 
     }
-    /*
-     * Ejercicio: - armar un informe que devuelva un resumen por estado de reservas
-     * con sus diferenes importes - armar un informe que devuelva un resumen por
-     * huesped con sus diferentes importes
-     */
 
 }
